@@ -19,4 +19,30 @@ void GameController::handleTurn() {
     // 2. 调用 play 获取坐标
     // 3. 调用 game_.makeMove(row, col)
     // 4. 如果落子失败，提示重新输入
+    std::pair<int, int> move;
+
+    if (game_.getMode() == GameMode::HumanVsAI) {
+        // 人机对战模式
+        if (game_.getCurrentPlayer() == CellState::X) {
+            // X 是人类玩家
+            move = game_.getHumanX().play(game_.getBoard());
+        }
+        else {
+            // O 是 AI 玩家
+            move = game_.getAIPlayer().play(game_.getBoard());
+        }
+    }
+    else {
+        // 双人对战模式
+        if (game_.getCurrentPlayer() == CellState::X) {
+            move = game_.getHumanX().play(game_.getBoard());
+        }
+        else {
+            move = game_.getHumanO().play(game_.getBoard());
+        }
+    }
+
+    if (!game_.makeMove(move.first, move.second)) {
+        std::cout << "落子失败，请重试！\n";
+    }
 }
